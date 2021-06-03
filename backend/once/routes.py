@@ -16,6 +16,11 @@ def _post_api_v1_secrets(hash):
             return jsonify({"error": "request does not contain any data"}), 400
     except KeyError:
         return jsonify({"error": "request does not contain any data"}), 400
+
+    # validate hash length
+    if len(hash) < 8 or len(hash) > 24:
+        return jsonify({"error": "hash is of invalid length"}), 400
+
     id = hash + ''.join(secrets.token_hex(8))
     while Secret.query.get(id) is not None:
         id = hash + ''.join(secrets.token_hex(8))
