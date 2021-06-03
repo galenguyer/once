@@ -16,12 +16,13 @@ class Secret(db.Model):
     def __repr__(self):
         return f"<Secret {id}>"
 
-    def __dict__(self):
+    def as_dict(self):
         d = {}
         d["id"] = self.id
         d["data"] = self.data
         d["created_at"] = str(self.created_at)
-        d["created_by"] = str(self.created_by) or "Anonymous"
-        d["created_email"] = str(self.created_email) or "none"
+        d["created_by"] = str(self.created_by) if self.created_by else "Anonymous"
+        d["created_email"] = str(self.created_email) if self.created_email else "none"
         d["max_views"] = self.max_views
-        d["delete_after"] = str(self.delete_after) or ""
+        d["delete_after"] = str(self.delete_after) if self.delete_after else ""
+        return d
