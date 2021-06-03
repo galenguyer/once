@@ -22,6 +22,9 @@ def _post_api_v1_secrets(id):
     return jsonify(Secret.query.get(id).as_dict())
 
 
-@once.route("/api/v1/secrets", methods=["GET"])
-def _get_api_v1_secrets():
-    return "", 204
+@once.route("/api/v1/secrets/<id>", methods=["GET"])
+def _get_api_v1_secrets(id):
+    data = Secret.query.get_or_404(id)
+    db.session.delete(data)
+    db.session.commit()
+    return jsonify(data.as_dict())
