@@ -4,8 +4,8 @@ from flask import request, jsonify
 import secrets
 
 
-@once.route("/api/v1/secrets/<id>", methods=["POST"])
-def _post_api_v1_secrets(id):
+@once.route("/api/v1/secrets/<hash>", methods=["POST"])
+def _post_api_v1_secrets(hash):
     # ensure data has some json
     if request.json is None:
         return jsonify({"error": "data is not recognized as valid json"}), 400
@@ -16,7 +16,9 @@ def _post_api_v1_secrets(id):
             return jsonify({"error": "request does not contain any data"}), 400
     except KeyError:
         return jsonify({"error": "request does not contain any data"}), 400
-    id = id + ''.join(secrets.token_hex(8))
+    id = hash + ''.join(secrets.token_hex(8))
+    while Secret.query.get(id) is not None:
+        id = hash + ''.join(secrets.token_hex(8))
     secret = Secret(id=id, data=str(request.json["data"]))
     db.session.add(secret)
     db.session.commit()
