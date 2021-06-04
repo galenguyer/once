@@ -21,9 +21,9 @@ def _post_api_v1_secrets(hash):
     if len(hash) < 8 or len(hash) > 24:
         return jsonify({"error": "hash is of invalid length"}), 400
 
-    id = hash + ''.join(secrets.token_hex(8))
+    id = hash + "".join(secrets.token_hex(8))
     while Secret.query.get(id) is not None:
-        id = hash + ''.join(secrets.token_hex(8))
+        id = hash + "".join(secrets.token_hex(8))
     secret = Secret(id=id, data=str(request.json["data"]))
     db.session.add(secret)
     db.session.commit()
